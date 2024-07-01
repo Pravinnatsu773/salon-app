@@ -156,10 +156,29 @@ class _EditProfileState extends State<EditProfile> {
                           height: 120,
                           width: 120,
                           decoration: const BoxDecoration(
+                            color: Colors.black,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Container(
+                            height: 120,
+                            width: 120,
+                            decoration: BoxDecoration(
+                              color: AppColor.primaryButton.withOpacity(0.6),
                               shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: AssetImage("assets/panda.png"),
-                                  fit: BoxFit.cover)),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              _firstNameController.text.isNotEmpty
+                                  ? _firstNameController.text
+                                      .substring(0, 1)
+                                      .toUpperCase()
+                                  : "",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 56,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
                         ),
                         SizedBox(
                           height: 16,
@@ -212,6 +231,9 @@ class _EditProfileState extends State<EditProfile> {
                               // ),
                               SizedBox(height: 24),
                               CustomField(
+                                onChanged: (value) {
+                                  setState(() {});
+                                },
                                 enabled: isEdit,
                                 controller: _firstNameController,
                                 lableText: "First name",

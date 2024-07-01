@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salonapp/common_ui/background_video_player.dart';
+import 'package:salonapp/screens/home/cubit/home_service_cubit.dart';
 import 'package:salonapp/screens/home/widgets/horizontal_product_service_card_section.dart';
 import 'package:salonapp/utils/app_color.dart';
 
@@ -15,6 +17,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final _homeServiceCubit = HomeServiceCubit();
   Timer? _timer;
   String hintText = '';
   int index = 0;
@@ -33,6 +36,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
+    _homeServiceCubit.getServiceByType();
     // _startTypewriterAnimation(0);
   }
 
@@ -89,7 +93,6 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    // _timer?.cancel();
     super.dispose();
   }
 
@@ -121,12 +124,34 @@ class _HomeState extends State<Home> {
                     viewportFraction: 1,
                     aspectRatio: 1,
                     height: 200)),
-            const HorizontalProductserviceCardSection(
-              headerText: 'Trending Services',
-            ),
-            const HorizontalProductserviceCardSection(
-              headerText: 'Popular Services',
-            ),
+            BlocBuilder<HomeServiceCubit, HomeServiceState>(
+                bloc: _homeServiceCubit,
+                builder: (context, state) {
+                  switch (state.runtimeType) {
+                    case HomeServiceDataFetched:
+                      final successState = state as HomeServiceDataFetched;
+                      return HorizontalProductserviceCardSection(
+                        headerText: 'Trending Services',
+                        data: successState.trending,
+                      );
+                    default:
+                      return SizedBox();
+                  }
+                }),
+            BlocBuilder<HomeServiceCubit, HomeServiceState>(
+                bloc: _homeServiceCubit,
+                builder: (context, state) {
+                  switch (state.runtimeType) {
+                    case HomeServiceDataFetched:
+                      final successState = state as HomeServiceDataFetched;
+                      return HorizontalProductserviceCardSection(
+                        headerText: 'Popular Services',
+                        data: successState.popular,
+                      );
+                    default:
+                      return SizedBox();
+                  }
+                }),
             const SizedBox(
               height: 16,
             ),
@@ -198,9 +223,20 @@ class _HomeState extends State<Home> {
             const SizedBox(
               height: 16,
             ),
-            const HorizontalProductserviceCardSection(
-              headerText: 'Recommended Services',
-            ),
+            BlocBuilder<HomeServiceCubit, HomeServiceState>(
+                bloc: _homeServiceCubit,
+                builder: (context, state) {
+                  switch (state.runtimeType) {
+                    case HomeServiceDataFetched:
+                      final successState = state as HomeServiceDataFetched;
+                      return HorizontalProductserviceCardSection(
+                        headerText: 'Recommended Services',
+                        data: successState.recommended,
+                      );
+                    default:
+                      return SizedBox();
+                  }
+                }),
             CachedNetworkImage(
               width: double.infinity,
               height: 180,

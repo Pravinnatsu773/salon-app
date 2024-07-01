@@ -39,7 +39,6 @@ class AuthCubit extends Cubit<AuthState> {
       if (success != null) {
         SharedPreferenceService.setString(
             'token', success.data['data']['token']);
-        SharedPreferenceService.setBool('isLoggedIn', true);
 
         return true;
       } else {

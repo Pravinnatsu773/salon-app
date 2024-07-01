@@ -61,35 +61,45 @@ class _ProfileState extends State<Profile> {
         color: Colors.black,
         child: Column(
           children: [
-            Container(
-              color: AppColor.primaryButton.withOpacity(0.7),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              height: 150,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 80,
-                    width: 80,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                            image: AssetImage("assets/panda.png"),
-                            fit: BoxFit.cover)),
-                  ),
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  SizedBox(
-                    // height: 60,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        BlocBuilder<ProfileCubit, ProfileState>(
-                          bloc: CubitService.profileCubit,
-                          builder: (context, state) {
-                            return Text(
+            BlocBuilder<ProfileCubit, ProfileState>(
+              bloc: CubitService.profileCubit,
+              builder: (context, state) {
+                return Container(
+                  color: AppColor.primaryButton.withOpacity(0.7),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  height: 150,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 80,
+                        width: 80,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white)),
+                        alignment: Alignment.center,
+                        child: Text(
+                          state is ProfileInLoadedState
+                              ? state.user.firstName
+                                  .substring(0, 1)
+                                  .toUpperCase()
+                              : "",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 42,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 16,
+                      ),
+                      SizedBox(
+                        // height: 60,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
                               state is ProfileInLoadedState
                                   ? "${state.user.firstName} ${state.user.lastName}"
                                   : "",
@@ -97,36 +107,36 @@ class _ProfileState extends State<Profile> {
                                   color: Colors.white,
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => EditProfile()));
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 6, horizontal: 16),
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.white, width: 1),
-                                borderRadius: BorderRadius.circular(8)),
-                            child: const Text(
-                              'My Profile',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
+                            const SizedBox(height: 10),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => EditProfile()));
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 16),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.white, width: 1),
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: const Text(
+                                  'My Profile',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
             Container(
               color: AppColor.primaryButton.withOpacity(0.6),

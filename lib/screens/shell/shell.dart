@@ -22,7 +22,7 @@ class _ShellState extends State<Shell> {
   final PageController _pageController = PageController(keepPage: true);
   List<BottomAppBarIcons> iconList = [
     BottomAppBarIcons(Icons.home, "Home"),
-    BottomAppBarIcons(Icons.search, "Search"),
+    // BottomAppBarIcons(Icons.search, "Search"),
     BottomAppBarIcons(Icons.store, "Store"),
     BottomAppBarIcons(Icons.history, "History"),
     BottomAppBarIcons(Icons.person, "Person"),
@@ -31,7 +31,7 @@ class _ShellState extends State<Shell> {
   @override
   void initState() {
     super.initState();
-     CubitService.profileCubit.getProfile();
+    CubitService.profileCubit.getProfile();
   }
 
   @override
@@ -91,7 +91,7 @@ class _ShellState extends State<Shell> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             const Home(),
-            const Search(),
+            // const Search(),
             const Store(),
             const Booking(),
             Profile(),

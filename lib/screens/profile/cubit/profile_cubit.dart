@@ -43,6 +43,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         dob = user.dob;
         gender = user.gender;
         updateValueGlobally(UserDetail());
+
+        SharedPreferenceService.setBool('isLoggedIn', true);
         emit(ProfileInLoadedState(user: user));
         return "shell";
       } else {

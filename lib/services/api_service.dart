@@ -7,4 +7,6 @@ class ApiService {
 
   static const profile = "$baseUrl/users";
   static const profileUpdate = "$baseUrl/users/update-profile";
+
+  static const serviceType = "$baseUrl/service-types";
 }

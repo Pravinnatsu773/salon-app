@@ -7,18 +7,21 @@ class CustomField extends StatelessWidget {
   final String lableText;
   final TextInputType inputType;
   final bool enabled;
+  final Function(String)? onChanged;
   const CustomField({
     super.key,
     required this.controller,
     required this.lableText,
     this.inputType = TextInputType.text,
     this.enabled = true,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
         controller: controller,
+        onChanged: onChanged,
         keyboardType: inputType,
         inputFormatters: inputType == TextInputType.number
             ? [
@@ -26,12 +29,12 @@ class CustomField extends StatelessWidget {
                     10), // Maximum character length
               ]
             : null,
-        style: TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
         decoration: InputDecoration(
             enabled: enabled,
             // prefixIcon: Icon(Icons.phone),
             label: Text(lableText),
-            labelStyle: TextStyle(color: Colors.black),
+            labelStyle: const TextStyle(color: Colors.black),
             disabledBorder: OutlineInputBorder(
                 borderSide:
                     BorderSide(color: Colors.grey.withOpacity(0.6), width: 1.0),

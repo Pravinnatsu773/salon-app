@@ -1,10 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:salonapp/screens/home/domain/model/service_type_model.dart';
 import 'package:salonapp/utils/app_color.dart';
 
 class HorizontalProductserviceCardSection extends StatelessWidget {
   final headerText;
-  const HorizontalProductserviceCardSection({super.key, this.headerText});
+  final List<ServiceTypesModel> data;
+  const HorizontalProductserviceCardSection(
+      {super.key, this.headerText, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +29,9 @@ class HorizontalProductserviceCardSection extends StatelessWidget {
             shrinkWrap: true,
             physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
-            itemCount: 10,
+            itemCount: data.length,
             itemBuilder: (context, index) {
+              final service = data[index];
               return Container(
                 width: 150,
                 height: 120,
@@ -38,7 +42,7 @@ class HorizontalProductserviceCardSection extends StatelessWidget {
                       width: 150,
                       height: 120,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(8),
                           image: const DecorationImage(
                               image: CachedNetworkImageProvider(
                                 'https://img.freepik.com/free-photo/female-hairdresser-using-hairbrush-hair-dryer_329181-1929.jpg?size=626&ext=jpg&ga=GA1.1.1845240027.1705814115&semt=ais_user',
@@ -52,7 +56,7 @@ class HorizontalProductserviceCardSection extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Haircut & Colouring',
+                          service.title,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
@@ -74,7 +78,7 @@ class HorizontalProductserviceCardSection extends StatelessWidget {
                                       size: 14,
                                     ),
                                     Text(
-                                      '4.6(2k)',
+                                      service.rating.toString(),
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 14,
@@ -85,13 +89,37 @@ class HorizontalProductserviceCardSection extends StatelessWidget {
                                 SizedBox(
                                   height: 2,
                                 ),
-                                Text(
-                                  '\u{20B9}599',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal),
-                                ),
+                                service.discountedPrice != null
+                                    ? Row(
+                                        children: [
+                                          Text(
+                                            '\u{20B9}${service.price}',
+                                            style: TextStyle(
+                                                color: Colors.black54,
+                                                decoration:
+                                                    TextDecoration.lineThrough,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                          SizedBox(
+                                            width: 4,
+                                          ),
+                                          Text(
+                                            '\u{20B9}${service.discountedPrice}',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.normal),
+                                          ),
+                                        ],
+                                      )
+                                    : Text(
+                                        '\u{20B9}${service.price}',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.normal),
+                                      ),
                               ],
                             ),
                             Container(
