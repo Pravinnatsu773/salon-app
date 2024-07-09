@@ -9,13 +9,36 @@ class StoreRepositoryImpl extends StoreRepository {
   final dio = Dio();
 
   @override
-  Future<Either<ErrorService, Response?>> getServiceOrProduct() async {
+  Future<Either<ErrorService, Response?>> getServiceOrProduct(
+      String selectedCategory) async {
     try {
       final token = SharedPreferenceService.getString('token');
       dio.options.headers['Authorization'] = 'Bearer $token';
       Response response;
 
-      response = await dio.get(ApiService.serviceType);
+      response = await dio.get(ApiService.serviceType +
+          (selectedCategory.isNotEmpty
+              ? "/category?category=$selectedCategory"
+              : ""));
+      print(response.data.toString());
+      return Right(response);
+    } on DioException catch (e) {
+      print(e);
+      return Left(ErrorService(msg: e.message ?? '', code: 0));
+    } catch (e) {
+      print(e);
+      return Left(ErrorService(msg: '', code: 0));
+    }
+  }
+
+  @override
+  Future<Either<ErrorService, Response?>> getCategories() async {
+    try {
+      final token = SharedPreferenceService.getString('token');
+      dio.options.headers['Authorization'] = 'Bearer $token';
+      Response response;
+
+      response = await dio.get("${ApiService.uniqueType}?type=category");
       print(response.data.toString());
       return Right(response);
     } on DioException catch (e) {

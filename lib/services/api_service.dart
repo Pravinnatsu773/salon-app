@@ -9,4 +9,8 @@ class ApiService {
   static const profileUpdate = "$baseUrl/users/update-profile";
 
   static const serviceType = "$baseUrl/service-types";
+
+  static const uniqueType = "$baseUrl/types/uniques";
+
+  static const cart = "$baseUrl/carts";
 }

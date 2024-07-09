@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salonapp/common_cubit/cubit/user_detail_cubit.dart';
+import 'package:salonapp/screens/address/presentation/address_page.dart';
 import 'package:salonapp/screens/auth_page/presentation/auth_page.dart';
+import 'package:salonapp/screens/cart/presentation/cart.dart';
 import 'package:salonapp/screens/profile/cubit/profile_cubit.dart';
 import 'package:salonapp/screens/profile/presentation/edit_profile.dart';
 import 'package:salonapp/screens/profile/model/menu.dart';
@@ -185,19 +187,25 @@ class _ProfileState extends State<Profile> {
                         ),
                         Column(
                           children: [
-                            CircleAvatar(
-                              radius: 26,
-                              backgroundColor: Colors.black,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AddressPage()));
+                              },
                               child: CircleAvatar(
-                                  radius: 26,
-                                  // backgroundColor: Color(0xFFF0F0F0),
-                                  backgroundColor:
-                                      AppColor.primaryButton.withOpacity(0.7),
-                                  child: Icon(
-                                    Icons.location_pin,
-                                    size: 26,
-                                    color: Colors.white,
-                                  )),
+                                radius: 26,
+                                backgroundColor: Colors.black,
+                                child: CircleAvatar(
+                                    radius: 26,
+                                    // backgroundColor: Color(0xFFF0F0F0),
+                                    backgroundColor:
+                                        AppColor.primaryButton.withOpacity(0.7),
+                                    child: Icon(
+                                      Icons.location_pin,
+                                      size: 26,
+                                      color: Colors.white,
+                                    )),
+                              ),
                             ),
                             SizedBox(
                               height: 6,
@@ -209,31 +217,37 @@ class _ProfileState extends State<Profile> {
                             ),
                           ],
                         ),
-                        Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 26,
-                              backgroundColor: Colors.black,
-                              child: CircleAvatar(
-                                  radius: 26,
-                                  // backgroundColor: Color(0xFFF0F0F0),
-                                  backgroundColor:
-                                      AppColor.primaryButton.withOpacity(0.7),
-                                  child: Icon(
-                                    Icons.shopping_bag_outlined,
-                                    color: Colors.white,
-                                    size: 26,
-                                  )),
-                            ),
-                            SizedBox(
-                              height: 6,
-                            ),
-                            Text(
-                              'Cart',
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w400),
-                            ),
-                          ],
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Cart()));
+                          },
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 26,
+                                backgroundColor: Colors.black,
+                                child: CircleAvatar(
+                                    radius: 26,
+                                    // backgroundColor: Color(0xFFF0F0F0),
+                                    backgroundColor:
+                                        AppColor.primaryButton.withOpacity(0.7),
+                                    child: Icon(
+                                      Icons.shopping_bag_outlined,
+                                      color: Colors.white,
+                                      size: 26,
+                                    )),
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              Text(
+                                'Cart',
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w400),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

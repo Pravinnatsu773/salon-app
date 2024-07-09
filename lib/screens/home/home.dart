@@ -18,6 +18,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final _homeServiceCubit = HomeServiceCubit();
+
+  final scrollController = ScrollController();
   Timer? _timer;
   String hintText = '';
   int index = 0;
@@ -32,11 +34,28 @@ class _HomeState extends State<Home> {
 
   int lengthOfText = 0;
   int currentIndexOfText = 0;
+
+  bool showAppBarMode = false;
   @override
   void initState() {
     super.initState();
 
     _homeServiceCubit.getServiceByType();
+
+    scrollController.addListener(() {
+      if (scrollController.offset > 200) {
+        setState(() {
+          showAppBarMode = true;
+        });
+        print("hello");
+      } else {
+        if (showAppBarMode) {
+          setState(() {
+            showAppBarMode = false;
+          });
+        }
+      }
+    });
     // _startTypewriterAnimation(0);
   }
 
@@ -98,154 +117,215 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.zero,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CarouselSlider(
-                // carouselController: _carouselController,
-                items: [
-                  'https://www.beautyisland.in/wp-content/uploads/2022/02/Beauty-island-Salon.jpg',
-                  'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/salon-offer-template-design-aa25107cd6cd3de28b2f016eba6ca5f3_screen.jpg?ts=1650818942',
-                  'https://d1csarkz8obe9u.cloudfront.net/posterpreviews/hair-salon-special-offer-discount-banner-design-template-34f3aee8ea279d7493751dddc0042a33_screen.jpg?ts=1561539354',
-                  'https://d168jcr2cillca.cloudfront.net/uploadimages/coupons/10745-GSBeautyStudio_640x320_Banner.jpg'
-                ]
-                    .map((e) => CachedNetworkImage(
-                          imageUrl: e,
-                          width: MediaQuery.of(context).size.width,
-                          fit: BoxFit.cover,
-                        ))
-                    .toList(),
-                options: CarouselOptions(
-                    autoPlay: true,
-                    enlargeCenterPage: false,
-                    viewportFraction: 1,
-                    aspectRatio: 1,
-                    height: 200)),
-            BlocBuilder<HomeServiceCubit, HomeServiceState>(
-                bloc: _homeServiceCubit,
-                builder: (context, state) {
-                  switch (state.runtimeType) {
-                    case HomeServiceDataFetched:
-                      final successState = state as HomeServiceDataFetched;
-                      return HorizontalProductserviceCardSection(
-                        headerText: 'Trending Services',
-                        data: successState.trending,
-                      );
-                    default:
-                      return SizedBox();
-                  }
-                }),
-            BlocBuilder<HomeServiceCubit, HomeServiceState>(
-                bloc: _homeServiceCubit,
-                builder: (context, state) {
-                  switch (state.runtimeType) {
-                    case HomeServiceDataFetched:
-                      final successState = state as HomeServiceDataFetched;
-                      return HorizontalProductserviceCardSection(
-                        headerText: 'Popular Services',
-                        data: successState.popular,
-                      );
-                    default:
-                      return SizedBox();
-                  }
-                }),
-            const SizedBox(
-              height: 16,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              child: Stack(
+    return Scaffold(
+      // appBar: PreferredSize(
+      //     preferredSize: const Size(double.infinity, 60),
+      //     child: Container(
+      //       // height: 40,
+      //       margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      //       decoration: BoxDecoration(
+      //           color: Colors.grey.shade200,
+      //           borderRadius: BorderRadius.circular(8)),
+      //       child: TextFormField(
+      //         decoration: InputDecoration(
+      //             prefixIcon: Icon(Icons.search_rounded),
+      //             hintText: "Search for service",
+      //             border: InputBorder.none),
+      //       ),
+      //     )),
+      body: Stack(
+        children: [
+          Padding(
+            padding: EdgeInsets.zero,
+            child: SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    height: 250,
-                    width: double.infinity,
-                    child: BackgroundVideoPlayer(
-                        videoUrl:
-                            'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'),
+                  CarouselSlider(
+                      // carouselController: _carouselController,
+                      items: [
+                        'https://www.shutterstock.com/image-photo/young-woman-visit-beauty-salon-600nw-1551548927.jpg',
+                        'https://cdn.create.vista.com/api/media/small/660916710/stock-photo-hairstylist-spraying-hair-female-client-hairdresser-braids-holding-spray-bottle',
+                        'https://www.mbmmakeupstudio.com/wp-content/uploads/2021/01/engagement-makeup-services-in-Delhi-1024x682.png',
+                        'https://img.freepik.com/free-photo/woman-hairdresser-salon_144627-8812.jpg'
+                      ]
+                          .map((e) => CachedNetworkImage(
+                                imageUrl: e,
+                                width: MediaQuery.of(context).size.width,
+                                fit: BoxFit.cover,
+                              ))
+                          .toList(),
+                      options: CarouselOptions(
+                          autoPlay: true,
+                          enlargeCenterPage: false,
+                          viewportFraction: 1,
+                          aspectRatio: 1,
+                          height: 300)),
+                  SizedBox(
+                    height: 12,
                   ),
-                  Container(
-                    height: 250,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        // color: Colors.black45.withOpacity(0.35),
-                        gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            colors: [
-                              Colors.black.withOpacity(0.78),
-                              Colors.black.withOpacity(0)
-                            ])),
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                  BlocBuilder<HomeServiceCubit, HomeServiceState>(
+                      bloc: _homeServiceCubit,
+                      builder: (context, state) {
+                        switch (state.runtimeType) {
+                          case HomeServiceDataFetched:
+                            final successState =
+                                state as HomeServiceDataFetched;
+                            return successState.trending.isNotEmpty
+                                ? HorizontalProductserviceCardSection(
+                                    headerText: 'Trending Services',
+                                    data: successState.trending,
+                                  )
+                                : SizedBox();
+                          default:
+                            return SizedBox();
+                        }
+                      }),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  BlocBuilder<HomeServiceCubit, HomeServiceState>(
+                      bloc: _homeServiceCubit,
+                      builder: (context, state) {
+                        switch (state.runtimeType) {
+                          case HomeServiceDataFetched:
+                            final successState =
+                                state as HomeServiceDataFetched;
+                            return successState.popular.isNotEmpty
+                                ? HorizontalProductserviceCardSection(
+                                    headerText: 'Popular Services',
+                                    data: successState.popular,
+                                  )
+                                : SizedBox();
+                          default:
+                            return SizedBox();
+                        }
+                      }),
+                  SizedBox(
+                    height: 42,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                    ),
+                    child: Stack(
                       children: [
-                        const Text(
-                          'LED PHOTO FACIAL',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        const Text(
-                          "Illuminate Your\nSkin's Natural\nLuminosty",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        const Spacer(),
                         Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 6),
+                          height: 250,
+                          width: double.infinity,
+                          child: BackgroundVideoPlayer(
+                              videoUrl:
+                                  'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'),
+                        ),
+                        Container(
+                          height: 250,
                           decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: const Text(
-                            'Explore',
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
+                              borderRadius: BorderRadius.circular(8),
+                              // color: Colors.black45.withOpacity(0.35),
+                              gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  colors: [
+                                    Colors.black.withOpacity(0.78),
+                                    Colors.black.withOpacity(0)
+                                  ])),
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'LED PHOTO FACIAL',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              const SizedBox(
+                                height: 16,
+                              ),
+                              const Text(
+                                "Illuminate Your\nSkin's Natural\nLuminosty",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              const Spacer(),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 6),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8)),
+                                child: const Text(
+                                  'Explore',
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )
+                            ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  BlocBuilder<HomeServiceCubit, HomeServiceState>(
+                      bloc: _homeServiceCubit,
+                      builder: (context, state) {
+                        switch (state.runtimeType) {
+                          case HomeServiceDataFetched:
+                            final successState =
+                                state as HomeServiceDataFetched;
+                            return successState.recommended.isNotEmpty
+                                ? HorizontalProductserviceCardSection(
+                                    headerText: 'Recommended Services',
+                                    data: successState.recommended,
+                                  )
+                                : SizedBox();
+                          default:
+                            return SizedBox();
+                        }
+                      }),
+                  SizedBox(
+                    height: 32,
+                  ),
+                  CachedNetworkImage(
+                    width: double.infinity,
+                    height: 180,
+                    imageUrl:
+                        'https://marketplace.canva.com/EAE-huAz88k/1/0/1600w/canva-modern-green-fashion-sale-%28banner-%28landscape%29%29-Ye_HTOWPMMQ.jpg',
+                    fit: BoxFit.cover,
+                  )
                 ],
               ),
             ),
-            const SizedBox(
-              height: 16,
-            ),
-            BlocBuilder<HomeServiceCubit, HomeServiceState>(
-                bloc: _homeServiceCubit,
-                builder: (context, state) {
-                  switch (state.runtimeType) {
-                    case HomeServiceDataFetched:
-                      final successState = state as HomeServiceDataFetched;
-                      return HorizontalProductserviceCardSection(
-                        headerText: 'Recommended Services',
-                        data: successState.recommended,
-                      );
-                    default:
-                      return SizedBox();
-                  }
-                }),
-            CachedNetworkImage(
-              width: double.infinity,
-              height: 180,
-              imageUrl:
-                  'https://marketplace.canva.com/EAE-huAz88k/1/0/1600w/canva-modern-green-fashion-sale-%28banner-%28landscape%29%29-Ye_HTOWPMMQ.jpg',
-              fit: BoxFit.cover,
-            )
-          ],
-        ),
+          ),
+          Positioned(
+            child: Container(
+                color: showAppBarMode ? Colors.white : null,
+                width: double.infinity,
+                height: 60,
+                child: Container(
+                  // height: 40,
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(8)),
+                  child: TextFormField(
+                    showCursor: false,
+                    decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.search_rounded),
+                        hintText: "Search for service",
+                        border: InputBorder.none),
+                  ),
+                )),
+          ),
+        ],
       ),
     );
   }

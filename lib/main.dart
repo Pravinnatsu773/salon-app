@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:salonapp/common_cubit/cubit/user_detail_cubit.dart';
+import 'package:salonapp/screens/address/cubit/address_cubit.dart';
 import 'package:salonapp/screens/auth_page/presentation/auth_page.dart';
+import 'package:salonapp/screens/cart/cubit/cart_cubit.dart';
 import 'package:salonapp/screens/profile/cubit/profile_cubit.dart';
 import 'package:salonapp/screens/profile/presentation/profile.dart';
 import 'package:salonapp/screens/shell/shell.dart';
+import 'package:salonapp/screens/store/cubit/store_data_cubit.dart';
 import 'package:salonapp/services/shared_preference_service.dart';
 import 'package:salonapp/services/user_detail.dart';
 
@@ -32,8 +35,21 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => UserDetailCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AddressCubit(),
+        ),
+        BlocProvider(
+          create: (context) => StoreDataCubit(),
+        ),
+        BlocProvider(
+          create: (context) => CartCubit(),
+        ),
+        BlocProvider(
+          create: (context) => UserDetailCubit(),
+        )
+      ],
       child: MaterialApp(
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,

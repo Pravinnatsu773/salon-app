@@ -15,21 +15,22 @@ class HomeServiceCubit extends Cubit<HomeServiceState> {
   getServiceByType() async {
     final result = await _homeServiceRepositoryImpl.getSericeByType();
 
-    result.fold((error) => null, (successData) {
+    result.fold((error) {
+      print(error);
+    }, (successData) {
       try {
         if (successData != null && successData.data['data'] != null) {
           final serviceTypeData =
               serviceTypesModelFromJson(successData.data['data']);
           emit(HomeServiceDataFetched(
               trending: serviceTypeData
-                  .where((element) => element.sellingTag == SellingTag.TRENDING)
+                  .where((element) => element.sellingTag == "BEST_SELLER")
                   .toList(),
               recommended: serviceTypeData
-                  .where((element) => element.sellingTag == SellingTag.MUST_TRY)
+                  .where((element) => element.sellingTag == "MUST_TRY")
                   .toList(),
               popular: serviceTypeData
-                  .where(
-                      (element) => element.sellingTag == SellingTag.BEST_SELLER)
+                  .where((element) => element.sellingTag == "Top Selling")
                   .toList()));
         }
       } catch (e) {
