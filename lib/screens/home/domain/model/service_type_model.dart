@@ -68,7 +68,7 @@ class ServiceTypesModel {
         rating: json["rating"]?.toDouble(),
         ratingCount: json["ratingCount"],
         active: json["active"],
-        sellingTag: json["sellingTag"],
+        sellingTag: json["sellingTag"] ?? "",
         howItWorks: List<HowItWork>.from(
             json["howItWorks"].map((x) => HowItWork.fromJson(x))),
         createdAt: DateTime.parse(json["createdAt"]),

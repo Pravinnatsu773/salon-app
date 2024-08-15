@@ -76,11 +76,10 @@ class ProfileCubit extends Cubit<ProfileState> {
       return false;
     }, (success) {
       if (success != null) {
-        if (success.data['data'] != null &&
-            success.data['data']['data']['firstName'] != null) {
+        if (success.data != null && success.data['data']['firstName'] != null) {
           SharedPreferenceService.setString(
-              "userProfile", success.data['data']['data'].toString());
-          final user = UserModel.fromJson(success.data['data']['data']);
+              "userProfile", success.data['data'].toString());
+          final user = UserModel.fromJson(success.data['data']);
 
           UserDetail().firstName = user.firstName;
 

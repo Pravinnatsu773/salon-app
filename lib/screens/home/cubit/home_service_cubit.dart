@@ -30,7 +30,7 @@ class HomeServiceCubit extends Cubit<HomeServiceState> {
                   .where((element) => element.sellingTag == "MUST_TRY")
                   .toList(),
               popular: serviceTypeData
-                  .where((element) => element.sellingTag == "Top Selling")
+                  .where((element) => element.sellingTag != "MUST_TRY" && element.sellingTag != "BEST_SELLER")
                   .toList()));
         }
       } catch (e) {

@@ -240,7 +240,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                               isLoading = true;
                               setState(() {});
 
-                              Future.delayed(Duration(seconds: 2), () {
+                              Future.delayed(Duration(seconds: 0), () {
                                 if (isOtpScreen) {
                                   _authCubit
                                       .verifyOtp(_mobileNumberController.text,

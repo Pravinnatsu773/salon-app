@@ -336,12 +336,37 @@ class _EditProfileState extends State<EditProfile> {
                             if (!isLoading) {
                               isLoading = true;
                               setState(() {});
-
+                              if (_firstNameController.text.isEmpty) {
+                                showToast(
+                                    "Please enter your first name", false);
+                                isLoading = false;
+                                setState(() {});
+                                return;
+                              }
+                              if (_lastNameController.text.isEmpty) {
+                                showToast("Please enter your last name", false);
+                                isLoading = false;
+                                setState(() {});
+                                return;
+                              }
+                              if (_dobController.text.isEmpty) {
+                                showToast(
+                                    "Please select your date of birth", false);
+                                isLoading = false;
+                                setState(() {});
+                                return;
+                              }
+                              if (_genderController.text.isEmpty) {
+                                showToast("Please select your gender", false);
+                                isLoading = false;
+                                setState(() {});
+                                return;
+                              }
                               if (_firstNameController.text.isNotEmpty &&
                                   _lastNameController.text.isNotEmpty &&
                                   _dobController.text.isNotEmpty &&
                                   _genderController.text.isNotEmpty) {
-                                Future.delayed(Duration(seconds: 2), () {
+                                Future.delayed(Duration(seconds: 0), () {
                                   CubitService.profileCubit
                                       .updateProfile(
                                           _firstNameController.text,
@@ -354,6 +379,8 @@ class _EditProfileState extends State<EditProfile> {
                                         Navigator.of(context).pushReplacement(
                                             MaterialPageRoute(
                                                 builder: (context) => Shell()));
+                                      } else {
+                                        Navigator.pop(context);
                                       }
 
                                       isEdit = false;
@@ -419,30 +446,80 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  showToast(String msg, bool isSuccess) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        showCloseIcon: true,
+        backgroundColor:
+            isSuccess ? AppColor.successButton : AppColor.dangerButton,
+        content: Container(
+          child: Text(
+            msg,
+            style: TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          ),
+        )));
+  }
+
   _showGenderPicker() {
     showCupertinoModalPopup(
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 150,
+          height: 200,
+          padding: EdgeInsets.only(top: 16, left: 16, right: 16),
           color: Colors.white,
-          child: CupertinoPicker(
-            itemExtent: 46.0,
-            backgroundColor: Colors.white,
-            onSelectedItemChanged: (int index) {
-              setState(() {
-                // selectedIndex = index;
-                // selectedGender = genders[index];
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        // selectedIndex = index;
+                        // selectedGender = genders[index];
 
-                _genderController.text = genders[index];
-              });
-            },
-            children: genders.map((String gender) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(gender),
-              );
-            }).toList(),
+                        _genderController.text =
+                            _genderController.text.isNotEmpty
+                                ? _genderController.text
+                                : genders[0];
+                      });
+
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Done',
+                      style: TextStyle(
+                          color: Colors.deepPurple,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                height: 150,
+                color: Colors.white,
+                child: CupertinoPicker(
+                  itemExtent: 46.0,
+                  backgroundColor: Colors.white,
+                  onSelectedItemChanged: (int index) {
+                    setState(() {
+                      // selectedIndex = index;
+                      // selectedGender = genders[index];
+
+                      _genderController.text = genders[index];
+                    });
+                  },
+                  children: genders.map((String gender) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(gender),
+                    );
+                  }).toList(),
+                ),
+              )
+            ],
           ),
         );
       },
@@ -464,27 +541,66 @@ class _EditProfileState extends State<EditProfile> {
         context: context,
         builder: (context) {
           return Container(
-            color: Colors.white,
-            height: 200,
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.date,
-              maximumYear: DateTime.now().year - 16,
-              minimumDate: DateTime(DateTime.now().year - 100,
-                  DateTime.now().month, DateTime.now().day),
-              maximumDate: DateTime(DateTime.now().year - 16,
-                  DateTime.now().month, DateTime.now().day),
-              initialDateTime: DateTime(year ?? DateTime.now().year - 16,
-                  month ?? DateTime.now().month, day ?? DateTime.now().day),
-              onDateTimeChanged: (DateTime newDateTime) {
-                // Do something
+              padding: EdgeInsets.only(top: 16, left: 16, right: 16),
+              color: Colors.white,
+              height: 250,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          try {
+                            final newDateTime = DateTime(
+                                year ?? DateTime.now().year - 16,
+                                month ?? DateTime.now().month,
+                                day ?? DateTime.now().day);
+                            _dobController.text =
+                                '${newDateTime.day.toString().padLeft(2, '0')}/${newDateTime.month.toString().padLeft(2, '0')}/${newDateTime.year}';
+                            print(_dobController.text);
+                            Navigator.pop(context);
+                          } catch (e) {
+                            print(e);
+                          }
+                        },
+                        child: Text(
+                          'Done',
+                          style: TextStyle(
+                              color: Colors.deepPurple,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    color: Colors.white,
+                    height: 200,
+                    child: CupertinoDatePicker(
+                      mode: CupertinoDatePickerMode.date,
+                      maximumYear: DateTime.now().year - 16,
+                      minimumDate: DateTime(DateTime.now().year - 100,
+                          DateTime.now().month, DateTime.now().day),
+                      maximumDate: DateTime(DateTime.now().year - 16,
+                          DateTime.now().month, DateTime.now().day),
+                      initialDateTime: DateTime(
+                          year ?? DateTime.now().year - 16,
+                          month ?? DateTime.now().month,
+                          day ?? DateTime.now().day),
+                      onDateTimeChanged: (DateTime newDateTime) {
+                        // Do something
 
-                print(newDateTime);
+                        print(newDateTime);
 
-                _dobController.text =
-                    '${newDateTime.day.toString().padLeft(2, '0')}/${newDateTime.month.toString().padLeft(2, '0')}/${newDateTime.year}';
-              },
-            ),
-          );
+                        _dobController.text =
+                            '${newDateTime.day.toString().padLeft(2, '0')}/${newDateTime.month.toString().padLeft(2, '0')}/${newDateTime.year}';
+                      },
+                    ),
+                  )
+                ],
+              ));
         });
   }
 }
